@@ -1,23 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
+import Header from './components/Header';
+import MusicCard from './components/MusicCard';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function App() {
+  const [input, setInput] = useState('');
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `https://v1.nocodeapi.com/jaya/spotify/rppKVVdabxGxuKhY/search?q=${input}&type=track`
+        );
+        setItems(res.data.tracks.items); 
+        console.log(res.data.tracks.items)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }; 
+
+    fetchData(); 
+  }, [input]); 
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header setInput={setInput} input={input}/>
+      <div className='songs'>
+        {items.map((item)=>{
+          return (
+            <MusicCard item={item} />
+          )
+        })}
+
+      </div>
     </div>
   );
 }
