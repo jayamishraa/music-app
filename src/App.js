@@ -30,7 +30,7 @@ function App() {
       <div className='songs'>
         {items.map((item)=>{
           return (
-            <MusicCard item={item} />
+            <MusicCard item={item} key={item.id}/>
           )
         })}
 
